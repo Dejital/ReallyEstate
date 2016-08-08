@@ -31,7 +31,7 @@ angular.module('reallyestate', ['ngRoute', 'ngResource'])
 
     .controller('ListingCtrl', function ListingCtrl($scope, store) {
 
-        var listings = $scope.listings = store.listings;
+        $scope.listings = store.listings;
 
         $scope.newListing = '';
 
@@ -51,25 +51,29 @@ angular.module('reallyestate', ['ngRoute', 'ngResource'])
                 .then(function success() {
                     $scope.newListing = '';
                 })
-            .finally(function() {
-                    $scope.isSaving = false;
-                });
+                .finally(function() {
+                        $scope.isSaving = false;
+                    });
         }
 
     })
 
     .controller('DetailCtrl', function DetailCtrl($scope, $location, $routeParams, api) {
 
-        var listing = $scope.listing = api.get($routeParams.listing);
+        $scope.listing = api.get($routeParams.listing);
 
-        $scope.deleteListing = function () {
-            api.delete(listing);
-            $location.path('/');
+        $scope.deleteListing = function (listing) {
+            api.delete(listing)
+                .finally(function() {
+                    $location.path('/');
+                    });
         }
 
-        $scope.saveListing = function () {
-            api.put(listing);
-            $location.path('/');
+        $scope.saveListing = function (listing) {
+            api.put(listing)
+                .finally(function() {
+                    $location.path('/');
+                    });
         }
 
     })
